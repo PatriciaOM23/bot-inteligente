@@ -2,13 +2,18 @@ package es.fplumara.dam.rebot.bot;
 
 import es.fplumara.dam.rebot.bot.commands.*;
 import es.fplumara.dam.rebot.config.AppConfig;
+import es.fplumara.dam.rebot.services.files.FileService;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class BotListener extends ListenerAdapter {
     private final AppConfig appConfig;
-    public BotListener(AppConfig appConfig) {
+    private final FileService fileService;
+    private final CommandRegistry commandRegistry;
+    public BotListener(AppConfig appConfig,FileService fileService, CommandRegistry commandRegistry) {
         this.appConfig = appConfig;
+        this.fileService = fileService;
+        this.commandRegistry = commandRegistry;
     }
 
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -17,22 +22,12 @@ public class BotListener extends ListenerAdapter {
         if (event.getAuthor().isBot()) {
             return;
         }
-
-        if (msg.startsWith("!last")) {
-            CommandRegistry commandRegistry = new CommandRegistry(event);
+        if(msg.startsWith("!")){
+            //Si el mensaje empieza por ! → delega a CommandRegistry.
         }
-        if (msg.startsWith("!log on")){
-        LogOnCommand logOnCommand = new LogOnCommand(event);
-        }
-        if(msg.startsWith("!log off")){
-            LogOffCommand logOffCommand = new LogOffCommand(event);
-        }
-        if(msg.startsWith("!last")){
-            LastCommand lastCommand = new LastCommand(event);
-        }
-        if(msg.startsWith("!help")){
-            HelpCommand helpCommand = new HelpCommand(event);
-        }
+        //3. Si NO es comando:
+        //    - si logs.enabled=false → no hace nada
+        //    - si logs.enabled=true → crea LogEntry y lo guarda con FileService.appendLog(...)
     }
 }
 

@@ -1,7 +1,10 @@
 package es.fplumara.dam.rebot;
 
 import es.fplumara.dam.rebot.bot.BotListener;
+import es.fplumara.dam.rebot.bot.commands.CommandRegistry;
 import es.fplumara.dam.rebot.config.AppConfig;
+import es.fplumara.dam.rebot.services.files.DefaultFileService;
+import es.fplumara.dam.rebot.services.files.FileService;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -16,6 +19,8 @@ public class BotMain {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         AppConfig config = AppConfig.getInstance();
+        FileService fileService = new DefaultFileService();
+        CommandRegistry commandRegistry = new CommandRegistry();
         String token = System.getenv("DISCORD_TOKEN");
         if (token == null || token.isBlank()) {
             throw new IllegalStateException("Falta DISCORD_TOKEN en variables de entorno");
@@ -25,7 +30,7 @@ public class BotMain {
 
         JDA jda = JDABuilder.createDefault(token)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                .addEventListeners(new BotListener(config))
+                .addEventListeners(new BotListener(config,fileService,commandRegistry))
                 .build()
                 .awaitReady();
 

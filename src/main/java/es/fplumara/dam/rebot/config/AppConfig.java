@@ -1,5 +1,7 @@
 package es.fplumara.dam.rebot.config;
 
+import es.fplumara.dam.rebot.model.LogMode;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -44,6 +46,14 @@ public class AppConfig {
     public Path logsDir(){
     return Path.of(props.getProperty("logs.dir","logs.dir"));
 
+    }
+
+    public LogMode logMode(){
+        return LogMode.valueOf(props.getProperty("logs.mode","TXT"));
+    }
+
+    public void changeLogMode(String logMode){
+        props.setProperty("logs.mode",logMode);
     }
 
     public boolean logsIncludeCommands(){
