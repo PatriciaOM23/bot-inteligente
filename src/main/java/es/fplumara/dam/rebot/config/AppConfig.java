@@ -4,60 +4,78 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.rmi.RemoteException;
 import java.util.Properties;
 
 public class AppConfig {
+        private static AppConfig instance;
+        private String storeType;
+        private String messageFile;
+        private Integer messageMaxLength;
+        private final Properties props;
+        private Path path = Path.of("C:\\Users\\patip\\IdeaProjects\\bot-inteligente\\data\\config.properties");
 
-
-    public AppConfig() throws IOException {
-        Path path = Path.of("C:\\Users\\patip\\IdeaProjects\\bot-inteligente\\data\\config.properties");
-        Properties props = new Properties();
+    private AppConfig() {
         try (InputStream in = Files.newInputStream(path)) {
+            props = new Properties();
             props.load(in);
+            storeType = props.getProperty("logs.mode", "TXT");
+            messageMaxLength = Integer.parseInt(props.getProperty("log.maxMessageLength", "500"));
+        } catch (IOException e){
+            throw new RuntimeException(e);
         }
     }
 
+    public static AppConfig getInstance() {
+        if(instance == null){
+            instance = new AppConfig();
+        }
+        return instance;
+    }
+
     public boolean logsEnabled() {
-    return true;
+        return  Boolean.parseBoolean(props.getProperty("logs.enabled","true"));
     }
 
     public void setLogsEnabled(){
+         props.setProperty("logs.enabled","true");
     }
 
     public Path logsDir(){
-    return null;
+    return Path.of(props.getProperty("logs.dir","logs.dir"));
+
     }
 
     public boolean logsIncludeCommands(){
-    return false;
+    return Boolean.parseBoolean(props.getProperty("logs.includeCommands","false"));
     }
 
     public int logsMaxMessageLength(){
-        return 0;
+        return Integer.parseInt(props.getProperty("logs.maxMessageLength","500"));
     }
 
     public Path reportsDir(){
-    return Path.of(null);
+    return Path.of(props.getProperty("reports.dir","data/reports"));
     }
-
     public boolean ttsEnabled(){
-        return false;
+        return Boolean.parseBoolean(props.getProperty("tts.enabled","false"));
     }
 
     public Path ttsDir(){
-        return Path.of(null);
+        return Path.of(props.getProperty("tts.dir","data/tts"));
     }
 
     public int ttsTextMaxChars(){
-        return 0;
+        return Integer.parseInt(props.getProperty("tts.textMaxChars","300"));
     }
 
     public void createDefaultlfMissing(){
 
     }
 
-    public void load(){
-
+    public void load() throws IOException {
+        InputStream in = Files.newInputStream(path);
+        props.load(in);
     }
 
     public void save(){
