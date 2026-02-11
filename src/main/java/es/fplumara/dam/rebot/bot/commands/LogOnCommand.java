@@ -14,7 +14,7 @@ public class LogOnCommand implements BotCommand{
     }
 
     @Override
-    public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event) {
+    public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event, String[] args) {
         //Cambia logs.enabled=true en AppConfig
         appConfig.setLogsEnabled();
         //- save() para persistir
@@ -22,5 +22,8 @@ public class LogOnCommand implements BotCommand{
         //- Responde “Logging: ON”
         event.getChannel().sendMessage("Logging: ON").queue();
     }
+
+
+
 
 }

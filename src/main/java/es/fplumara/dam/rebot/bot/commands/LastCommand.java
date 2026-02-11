@@ -1,10 +1,12 @@
 package es.fplumara.dam.rebot.bot.commands;
 
 import es.fplumara.dam.rebot.config.AppConfig;
+import es.fplumara.dam.rebot.services.files.DefaultFileService;
 import es.fplumara.dam.rebot.services.files.FileService;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class LastCommand implements BotCommand{
+public class LastCommand implements BotCommand {
+    FileService fileService = new DefaultFileService();
     public LastCommand() {
     }
 
@@ -12,12 +14,11 @@ public class LastCommand implements BotCommand{
     public String getName() {
         return "!last";
     }
-    public int getArgs(){
-        //if commandregistry = lastcommand ask for int
-        return 0;
-    }
-    @Override
-    public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event) {
 
+    @Override
+    public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event, String[] args) {
+        int n = Integer.parseInt(args[0]);
+        fileService.readLast(event.getChannel().toString(), n);
     }
+
 }

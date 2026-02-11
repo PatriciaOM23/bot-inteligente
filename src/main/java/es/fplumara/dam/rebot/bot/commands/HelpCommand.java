@@ -14,11 +14,13 @@ public class HelpCommand implements BotCommand{
     }
 
     @Override
-    public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event) {
+    public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event, String[] args) {
         event.getChannel().sendMessage("Comandos disponibles" +
                 "!help -> Lista comandos disponibles y ejemplos." +
                 "!last -> Leer las últimas líneas de un log" +
                 "!logon -> Permite registrar logs" +
                 "!logoff -> Deja de registrar logs ").queue();
     }
+
+
 }

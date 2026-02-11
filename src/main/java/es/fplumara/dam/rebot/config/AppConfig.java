@@ -94,6 +94,8 @@ public class AppConfig {
 
     public void save(){
     //FILE SERVICE
+        // save(): escribe en disco lo que hay en memoria.
+
     }
 }
 

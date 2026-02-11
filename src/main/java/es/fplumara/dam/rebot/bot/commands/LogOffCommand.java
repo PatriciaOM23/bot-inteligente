@@ -14,11 +14,13 @@ public class LogOffCommand implements BotCommand{
     }
 
     @Override
-    public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event) {
+    public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event, String[] args) {
         //- Cambia logs.enabled=false
         appConfig.setLogsDisabled();
         //- save()
         //- Responde “Logging: OFF”
         event.getChannel().sendMessage("Logging: OFF").queue();
     }
+
+
 }
