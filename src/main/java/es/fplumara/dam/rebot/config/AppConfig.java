@@ -27,7 +27,7 @@ public class AppConfig {
             throw new RuntimeException(e);
         }
     }
-
+        //SINGLETON
     public static AppConfig getInstance() {
         if(instance == null){
             instance = new AppConfig();
@@ -41,6 +41,10 @@ public class AppConfig {
 
     public void setLogsEnabled(){
          props.setProperty("logs.enabled","true");
+    }
+
+    public void setLogsDisabled(){
+        props.setProperty("logs.enabled","false");
     }
 
     public Path logsDir(){
@@ -89,7 +93,7 @@ public class AppConfig {
     }
 
     public void save(){
-
+    //FILE SERVICE
     }
 }
 

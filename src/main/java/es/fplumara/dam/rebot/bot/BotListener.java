@@ -23,6 +23,7 @@ public class BotListener extends ListenerAdapter {
             return;
         }
         if(msg.startsWith("!")){
+            commandRegistry.handleCommands(msg);
             //Si el mensaje empieza por ! → delega a CommandRegistry.
         }
         //3. Si NO es comando:

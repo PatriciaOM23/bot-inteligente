@@ -6,6 +6,7 @@ public class DefaultFileService implements  FileService{
 
     @Override
     public void appendLog(String channelId, String entry) {
+
     }
 
     @Override
