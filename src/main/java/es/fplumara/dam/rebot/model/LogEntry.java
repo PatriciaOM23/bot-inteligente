@@ -2,11 +2,24 @@ package es.fplumara.dam.rebot.model;
 
 import java.sql.Timestamp;
 
-public class LogEntry {
-    Timestamp timestamp;
-    String author;
-    String content;
-    String channelId;
+public record LogEntry(
+    Timestamp timestamp,
+    String author,
+    String content
+){
+
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getContent() {
+        return content;
+    }
 
 
 }

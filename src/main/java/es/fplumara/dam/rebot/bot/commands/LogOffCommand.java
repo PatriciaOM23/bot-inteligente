@@ -18,6 +18,7 @@ public class LogOffCommand implements BotCommand{
         //- Cambia logs.enabled=false
         appConfig.setLogsDisabled();
         //- save()
+        appConfig.save();
         //- Responde “Logging: OFF”
         event.getChannel().sendMessage("Logging: OFF").queue();
     }

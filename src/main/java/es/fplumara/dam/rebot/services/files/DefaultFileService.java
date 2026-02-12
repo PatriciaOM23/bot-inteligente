@@ -1,6 +1,8 @@
 package es.fplumara.dam.rebot.services.files;
 
 import es.fplumara.dam.rebot.config.AppConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,63 +12,49 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class DefaultFileService implements  FileService{
-
+    private static final Logger log = LoggerFactory.getLogger(DefaultFileService.class);
+    LogStoreFactory logStoreFactory = new LogStoreFactory();
     private Path pathLogsDir = AppConfig.getInstance().logsDir();
     private String logMode = String.valueOf(AppConfig.getInstance().logMode()).toLowerCase();
     private int maxCharacters = AppConfig.getInstance().logsMaxMessageLength();
+
+
    /* - Usa LogStoreFactory para obtener:
             - TxtLogStore o CsvLogStore
             - Crea directorios si faltan.
-          */
+
+    - Usa AppConfig para:
+            - decidir modo TXT/CSV (logsMode)
+    - ruta base (logsDir)
+    - máximo caracteres
+     */
     @Override
     public void appendLog(String channelId, String entry) {
         // guarda entrada
-        try {
-            Files.write(
-                    Path.of(pathLogsDir + "/" + channelId + "." + logMode),
-                    List.of(entry),
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.APPEND
-            );
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+      Path path =  Path.of(pathLogsDir + "/" + channelId + "." + logMode);
+        LogStore logStore = logStoreFactory.createLog(logMode);
+        logStore.appendLog(path,entry);
+      // Usa LogStoreFactory para obtener:
     }
 
     @Override
     public String readAll(String channelId) {
         //devuelve historial completo
-        StringBuilder sb = new StringBuilder();
-    try(BufferedReader br = Files.newBufferedReader(Path.of(pathLogsDir + "/" + channelId + "." + logMode))){
-        String line;
-        while ((line = br.readLine()) != null){
-            sb.append(line);
+        Path path =  Path.of(pathLogsDir + "/" + channelId + "." + logMode);
+        LogStore logStore = logStoreFactory.createLog(logMode);
+        String info = logStore.readAll(path);
+        if(info.length() > maxCharacters){
+           return info.substring(0,maxCharacters);
         }
-    } catch (IOException e){
-        e.printStackTrace();
-    }
-    if(sb.toString().length() > maxCharacters){
-        //Aplica recorte maxMessageLength.
-    }
-        return sb.toString();
+        return info;
     }
 
     @Override
-    public String readLast(String channelId, int n) {
+    public void readLast(String channelId, int n) {
         // últimas N líneas/entradas
-        StringBuilder sb = new StringBuilder();
-        try(BufferedReader br = Files.newBufferedReader(Path.of(pathLogsDir + "/" + channelId + "." + logMode))) {
-            String line;
-            int count = 0;
-            do {
-                line = br.readLine();
-                sb.append(line);
-                count++;
-            } while (count <= 20);
+        Path path =  Path.of(pathLogsDir + "/" + channelId + "." + logMode);
+        LogStore logStore = logStoreFactory.createLog(logMode);
+        logStore.readLast(path,n);
 
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        return sb.toString();
     }
 }
