@@ -19,10 +19,9 @@ import java.util.List;
 public class CsvLogStore implements LogStore {
     LogEntry logEntry;
     @Override
-    public void appendLog(Path path, String entry) {
+    public void appendLog(Path path, LogEntry entry) {
         try {
-            String timestamp = String.valueOf(logEntry.getTimestamp());
-            String author = logEntry.getAuthor();
+
             boolean fileExists = Files.exists(path);
             CSVFormat format = CSVFormat.DEFAULT.builder()
                     .setDelimiter(';')
@@ -34,7 +33,7 @@ public class CsvLogStore implements LogStore {
                     StandardOpenOption.CREATE,
                     StandardOpenOption.APPEND);
             CSVPrinter printer = new CSVPrinter(writer,format);
-            printer.printRecord(timestamp,author,entry);
+            printer.printRecord(entry.timestamp(),entry.author(),entry.content());
         } catch (Exception e){
             throw new StoreException("Failure trying to store csv.");
         }

@@ -21,16 +21,11 @@ public class CommandRegistry {
        addCommand(new LogOffCommand());
     }
 
-    public CommandRegistry(AppConfig appConfig, FileService fileService, MessageReceivedEvent event) {
-        this.appConfig = appConfig;
-        this.fileService = fileService;
-        this.event = event;
-    }
     public void addCommand (BotCommand command){
         commandsMap.put(command.getName(),command);
     }
 
-    public void handleCommands(String input){
+    public void handleCommands(AppConfig appConfig,FileService fileService, MessageReceivedEvent event, String input){
         // DIVIDO COMANDO EN !comando
         String[] inputCommand = input.split(" ");
         String commandUser = inputCommand[0];

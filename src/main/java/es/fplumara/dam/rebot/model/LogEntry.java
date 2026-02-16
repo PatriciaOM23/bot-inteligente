@@ -7,18 +7,6 @@ public record LogEntry(
     String author,
     String content
 ){
-
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
+    // LOS RECORDS TIENEN GETTERS POR DEFECTO
 
 }

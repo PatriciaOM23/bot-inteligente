@@ -1,9 +1,11 @@
 package es.fplumara.dam.rebot.config;
 
+import es.fplumara.dam.rebot.exceptions.ConfigException;
 import es.fplumara.dam.rebot.model.LogMode;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.rmi.RemoteException;
@@ -87,14 +89,22 @@ public class AppConfig {
 
     }
 
-    public void load() throws IOException {
-        InputStream in = Files.newInputStream(path);
+    public void load()  {
+        try(InputStream in = Files.newInputStream(path)){
+
         props.load(in);
+        } catch (IOException e){
+            throw new ConfigException("Unable to load the configuration");
+        }
     }
 
     public void save(){
-    //FILE SERVICE
-        // save(): escribe en disco lo que hay en memoria.
+        //Si no llamo a save(), los cambios solo viven en memoria y se pierden al cerrar la app
+        try(OutputStream out = Files.newOutputStream(path)){
+            props.store(out, "Updated configuration");
+        }catch (IOException e){
+            throw new ConfigException("Unable to save the configuration");
+        }
 
     }
 }

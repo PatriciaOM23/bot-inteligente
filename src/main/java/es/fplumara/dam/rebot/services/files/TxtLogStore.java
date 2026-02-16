@@ -14,14 +14,12 @@ import java.util.List;
 public class TxtLogStore implements LogStore{
     LogEntry logEntry;
     @Override
-    public void appendLog(Path path, String entry) {
+    public void appendLog(Path path, LogEntry entry) {
         // guarda entrada
         try {
-
             //timestamp | author | content
             // Inicicializo
-            LogEntry log = new LogEntry(logEntry.getTimestamp(),logEntry.getAuthor(),entry);
-            String line = log.getTimestamp() + "|" + log.getAuthor() + "|" + entry;
+            String line = entry.timestamp() + "|" + entry.author() + "|" + entry.content();
             Files.write(
                     path,
                     List.of(line),

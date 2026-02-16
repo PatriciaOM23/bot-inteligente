@@ -1,8 +1,12 @@
 package es.fplumara.dam.rebot.bot.commands;
 
 import es.fplumara.dam.rebot.config.AppConfig;
+import es.fplumara.dam.rebot.model.LogEntry;
 import es.fplumara.dam.rebot.services.files.FileService;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 
 public class LogOnCommand implements BotCommand{
     public LogOnCommand() {
@@ -21,6 +25,7 @@ public class LogOnCommand implements BotCommand{
         appConfig.save();
         //- Responde “Logging: ON”
         event.getChannel().sendMessage("Logging: ON").queue();
+
     }
 
 

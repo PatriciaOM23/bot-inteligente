@@ -2,6 +2,7 @@ package es.fplumara.dam.rebot.services.files;
 
 import es.fplumara.dam.rebot.config.AppConfig;
 import es.fplumara.dam.rebot.exceptions.StoreException;
+import es.fplumara.dam.rebot.model.LogEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,35 +17,31 @@ public class DefaultFileService implements  FileService{
     private static final Logger log = LoggerFactory.getLogger(DefaultFileService.class);
     LogStoreFactory logStoreFactory = new LogStoreFactory();
     private Path pathLogsDir = AppConfig.getInstance().logsDir();
-    private String logMode = String.valueOf(AppConfig.getInstance().logMode()).toLowerCase();
+    private String logMode = String.valueOf(AppConfig.getInstance().logMode());
     private int maxCharacters = AppConfig.getInstance().logsMaxMessageLength();
 
-
-   /* - Usa LogStoreFactory para obtener:
-            - TxtLogStore o CsvLogStore
-            - Crea directorios si faltan.
-
-    - Usa AppConfig para:
-            - decidir modo TXT/CSV (logsMode)
-    - ruta base (logsDir)
-    - máximo caracteres
-     */
     @Override
-    public void appendLog(String channelId, String entry) {
+    public void appendLog(String channelId, LogEntry entry) {
         // guarda entrada
         try {
+            System.out.println("LOG MODE -> " + logMode);
             Path path = Path.of(pathLogsDir + "/" + channelId + "." + logMode);
             //crea directorios si faltan
-            Files.createDirectories(pathLogsDir.getParent());
+            Files.createDirectories(pathLogsDir);
             //aplica recorte max length
-            if (entry.length() > maxCharacters) {
-                entry = entry.substring(0, maxCharacters);
+            String content = entry.content();
+            if (content.length() > maxCharacters) {
+                content = content.substring(0, maxCharacters);
             }
-      // Usa LogStoreFactory para obtener:
+        // contenido recortado
+            LogEntry trimmedEntry = new LogEntry(
+              entry.timestamp(),
+                    entry.author(),
+                    content );
             LogStore logStore = logStoreFactory.createLog(logMode);
-            logStore.appendLog(path, entry);
+            logStore.appendLog(path, trimmedEntry);
         } catch (Exception e ){
-            throw new StoreException("Failure appending logs.");
+            throw new StoreException("Failure appending logs.", e);
         }
     }
 
@@ -61,11 +58,14 @@ public class DefaultFileService implements  FileService{
     }
 
     @Override
-    public void readLast(String channelId, int n) {
+    public String readLast(String channelId, int n) {
         // últimas N líneas/entradas
         Path path =  Path.of(pathLogsDir + "/" + channelId + "." + logMode);
         LogStore logStore = logStoreFactory.createLog(logMode);
-        logStore.readLast(path,n);
-
+        String lastLines = logStore.readLast(path,n);
+        if(lastLines.length() > maxCharacters){
+            return lastLines.substring(0,maxCharacters);
+        }
+        return lastLines;
     }
 }

@@ -21,6 +21,7 @@ public class LogOffCommand implements BotCommand{
         appConfig.save();
         //- Responde “Logging: OFF”
         event.getChannel().sendMessage("Logging: OFF").queue();
+
     }
 
 
