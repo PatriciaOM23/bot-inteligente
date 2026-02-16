@@ -1,5 +1,6 @@
 package es.fplumara.dam.rebot.services.files;
 
+import es.fplumara.dam.rebot.exceptions.StoreException;
 import es.fplumara.dam.rebot.model.LogEntry;
 
 import java.io.BufferedReader;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TxtLogStore implements LogStore{
@@ -15,15 +17,19 @@ public class TxtLogStore implements LogStore{
     public void appendLog(Path path, String entry) {
         // guarda entrada
         try {
+
             //timestamp | author | content
+            // Inicicializo
+            LogEntry log = new LogEntry(logEntry.getTimestamp(),logEntry.getAuthor(),entry);
+            String line = log.getTimestamp() + "|" + log.getAuthor() + "|" + entry;
             Files.write(
                     path,
-                    List.of(new LogEntry(logEntry.getTimestamp(),logEntry.getAuthor(),entry).toString()),
+                    List.of(line),
                     StandardOpenOption.CREATE,
                     StandardOpenOption.APPEND
             );
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (Exception e){
+            throw new StoreException("Failure writing logs...");
         }
 
     }
@@ -38,7 +44,7 @@ public class TxtLogStore implements LogStore{
                 sb.append(line);
             }
         } catch (IOException e){
-            e.printStackTrace();
+            throw new StoreException("Failure reading logs.");
         }
         return sb.toString();
 
@@ -46,22 +52,25 @@ public class TxtLogStore implements LogStore{
 
     @Override
     public String readLast(Path path, int n) {
-        // últimas N líneas/entradas
-        StringBuilder sb = new StringBuilder();
-        try(BufferedReader br = Files.newBufferedReader(path)) {
+        try(BufferedReader br = Files.newBufferedReader(path)){
+            List <String> text = new ArrayList<>();
             String line;
-            int count = 0;
-            do {
-                line = br.readLine();
-                sb.append(line);
-                count++;
-            } while (count <= n);
-
-        } catch (IOException e){
-            e.printStackTrace();
+            // Leer todas las líneas en la lista
+            while ((line = br.readLine()) != null) {
+                text.add(line);
+            }
+            //si tiene más de n lineas empieza a leer por text.size - n
+            int readLines = Math.max(0,text.size() - n);
+            StringBuilder sb = new StringBuilder();
+            //lee a partir de readLines
+            for(int i = readLines; i < text.size(); i++){
+                sb.append(text.get(i)).append("\n");
+            }
+            return sb.toString();
+        } catch (Exception e ){
+            throw new StoreException("Error al leer el archivo");
         }
-        return sb.toString();
-    }
+}
 }
 
 

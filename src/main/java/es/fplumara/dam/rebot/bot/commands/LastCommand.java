@@ -17,8 +17,12 @@ public class LastCommand implements BotCommand {
 
     @Override
     public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event, String[] args) {
-        int n = Integer.parseInt(args[0]);
+        try {
+            int n = Integer.parseInt(args[0]);
         fileService.readLast(event.getChannel().toString(), n);
+        } catch (NumberFormatException e){
+            event.getChannel().sendMessage("Introduce un número válido. _(!last 10)_").queue();
+        }
     }
 
 }

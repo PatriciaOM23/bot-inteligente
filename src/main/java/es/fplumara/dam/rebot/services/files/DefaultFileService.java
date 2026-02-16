@@ -1,6 +1,7 @@
 package es.fplumara.dam.rebot.services.files;
 
 import es.fplumara.dam.rebot.config.AppConfig;
+import es.fplumara.dam.rebot.exceptions.StoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +32,20 @@ public class DefaultFileService implements  FileService{
     @Override
     public void appendLog(String channelId, String entry) {
         // guarda entrada
-      Path path =  Path.of(pathLogsDir + "/" + channelId + "." + logMode);
-        LogStore logStore = logStoreFactory.createLog(logMode);
-        logStore.appendLog(path,entry);
+        try {
+            Path path = Path.of(pathLogsDir + "/" + channelId + "." + logMode);
+            //crea directorios si faltan
+            Files.createDirectories(pathLogsDir.getParent());
+            //aplica recorte max length
+            if (entry.length() > maxCharacters) {
+                entry = entry.substring(0, maxCharacters);
+            }
       // Usa LogStoreFactory para obtener:
+            LogStore logStore = logStoreFactory.createLog(logMode);
+            logStore.appendLog(path, entry);
+        } catch (Exception e ){
+            throw new StoreException("Failure appending logs.");
+        }
     }
 
     @Override
