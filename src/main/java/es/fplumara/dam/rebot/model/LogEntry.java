@@ -8,7 +8,6 @@ public record LogEntry(
     String content
 ){
 
-
     public Timestamp getTimestamp() {
         return timestamp;
     }
