@@ -38,7 +38,7 @@ public class AppConfig {
     }
 
     public boolean logsEnabled() {
-        return  Boolean.parseBoolean(props.getProperty("logs.enabled","false"));
+        return  Boolean.parseBoolean(props.getProperty("logs.enabled","true"));
     }
 
     public void setLogsEnabled(){
