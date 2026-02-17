@@ -34,6 +34,8 @@ public class CsvLogStore implements LogStore {
                     StandardOpenOption.APPEND);
             CSVPrinter printer = new CSVPrinter(writer,format);
             printer.printRecord(entry.timestamp(),entry.author(),entry.content());
+            printer.flush();
+            printer.close();
         } catch (Exception e){
             throw new StoreException("Failure trying to store csv.");
         }

@@ -24,7 +24,6 @@ public class DefaultFileService implements  FileService{
     public void appendLog(String channelId, LogEntry entry) {
         // guarda entrada
         try {
-            System.out.println("LOG MODE -> " + logMode);
             Path path = Path.of(pathLogsDir + "/" + channelId + "." + logMode);
             //crea directorios si faltan
             Files.createDirectories(pathLogsDir);

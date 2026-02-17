@@ -17,7 +17,9 @@ public class HelpCommand implements BotCommand{
     public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event, String[] args) {
         event.getChannel().sendMessage("Comandos disponibles" +
                 "!help -> Lista comandos disponibles y ejemplos." +
-                "!last -> Leer las últimas líneas de un log" +
+                "!logmode -> Cambiar los logs (CSV/TXT) - !logmode csv" +
+                "!readall -> Lee todas las líneas de un log" +
+                "!last -> Leer las últimas líneas de un log - !last 20" +
                 "!logon -> Permite registrar logs" +
                 "!logoff -> Deja de registrar logs ").queue();
     }

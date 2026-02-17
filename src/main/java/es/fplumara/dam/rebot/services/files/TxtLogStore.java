@@ -27,7 +27,7 @@ public class TxtLogStore implements LogStore{
                     StandardOpenOption.APPEND
             );
         } catch (Exception e){
-            throw new StoreException("Failure writing logs...");
+            throw new StoreException("Failure writing logs...", e);
         }
 
     }

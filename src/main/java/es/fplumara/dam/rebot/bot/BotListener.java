@@ -40,7 +40,6 @@ public class BotListener extends ListenerAdapter {
                     Timestamp.from(Instant.now()),
                     event.getAuthor().getName(),
                     event.getMessage().getContentRaw() );
-
                 fileService.appendLog(event.getChannel().getId(), entry);
 
         }

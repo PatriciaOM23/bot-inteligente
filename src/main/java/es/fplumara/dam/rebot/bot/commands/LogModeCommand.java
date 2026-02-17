@@ -4,27 +4,25 @@ import es.fplumara.dam.rebot.config.AppConfig;
 import es.fplumara.dam.rebot.services.files.FileService;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class LogOffCommand implements BotCommand{
-    public LogOffCommand() {
+public class LogModeCommand implements BotCommand{
+    public LogModeCommand() {
     }
 
     @Override
     public String getName() {
-        return "!logoff";
+        return "!logmode";
     }
 
     @Override
     public void execute(AppConfig appConfig, FileService fileService, MessageReceivedEvent event, String[] args) {
-        //- Cambia logs.enabled=false
-        appConfig.setLogsDisabled();
-        //- save()
+        if(appConfig.logMode().toString().equals("TXT")){
+            appConfig.changeLogMode("CSV");
+        } else {
+            appConfig.changeLogMode("TXT");
+        }
         appConfig.save();
-        //- Responde “Logging: OFF”
         appConfig.load();
-
-        event.getChannel().sendMessage("Logging: OFF").queue();
+        event.getChannel().sendMessage("Log Mod: " + appConfig.logMode()).queue();
 
     }
-
-
 }

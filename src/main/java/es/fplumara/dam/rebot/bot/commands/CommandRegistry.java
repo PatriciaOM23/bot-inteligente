@@ -4,7 +4,6 @@ import es.fplumara.dam.rebot.config.AppConfig;
 import es.fplumara.dam.rebot.services.files.FileService;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,8 @@ public class CommandRegistry {
        addCommand(new LastCommand());
        addCommand(new LogOnCommand());
        addCommand(new LogOffCommand());
+       addCommand(new ReadAllCommand());
+       //addCommand(new LogModeCommand());
     }
 
     public void addCommand (BotCommand command){
@@ -36,7 +37,6 @@ public class CommandRegistry {
             event.getChannel().sendMessage("Comando desconocido. Para ver los comandos usa !help").queue();
             return;
         }
-        // FALTA ENVIAR LOS ARGS POR EJEMPLO !last N
         command.execute(appConfig,fileService,event,args);
 
     }

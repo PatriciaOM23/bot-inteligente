@@ -17,7 +17,7 @@ public class AppConfig {
         private String messageFile;
         private Integer messageMaxLength;
         private final Properties props;
-        private Path path = Path.of("C:\\Users\\patip\\IdeaProjects\\bot-inteligente\\data\\config.properties");
+        private Path path = Path.of("data/config.properties");
 
     private AppConfig() {
         try (InputStream in = Files.newInputStream(path)) {
@@ -26,7 +26,7 @@ public class AppConfig {
             storeType = props.getProperty("logs.mode", "TXT");
             messageMaxLength = Integer.parseInt(props.getProperty("log.maxMessageLength", "500"));
         } catch (IOException e){
-            throw new RuntimeException(e);
+            throw new ConfigException("Failure in the config", e);
         }
     }
         //SINGLETON
@@ -38,7 +38,7 @@ public class AppConfig {
     }
 
     public boolean logsEnabled() {
-        return  Boolean.parseBoolean(props.getProperty("logs.enabled","true"));
+        return  Boolean.parseBoolean(props.getProperty("logs.enabled","false"));
     }
 
     public void setLogsEnabled(){
