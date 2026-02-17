@@ -19,7 +19,6 @@ public class CommandRegistry {
        addCommand(new LogOnCommand());
        addCommand(new LogOffCommand());
        addCommand(new ReadAllCommand());
-       //addCommand(new LogModeCommand());
     }
 
     public void addCommand (BotCommand command){

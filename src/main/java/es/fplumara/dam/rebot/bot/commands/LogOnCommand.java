@@ -23,7 +23,6 @@ public class LogOnCommand implements BotCommand{
         appConfig.setLogsEnabled();
         //- save() para persistir
         appConfig.save();
-        appConfig.load();
         //- Responde “Logging: ON”
         event.getChannel().sendMessage("Logging: ON").queue();
 
